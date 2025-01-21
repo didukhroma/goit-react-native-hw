@@ -14,12 +14,10 @@ import Input from '../components/Input';
 import StyledButton from '../components/StyledButton';
 
 import { colors } from '../styles/colors';
-import { REGISTER_INITIAL_STATE } from '../helpers/constants';
+import { LOGIN_INITIAL_STATE } from '../helpers/constants';
 
-import CirclePlusSvg from '../icons/CirclePlusSvg';
-
-export default function RegistrationScreen() {
-  const [user, setUser] = useState(REGISTER_INITIAL_STATE);
+const LoginScreen = () => {
+  const [user, setUser] = useState(LOGIN_INITIAL_STATE);
 
   const onChangeUserData = (key, value) => {
     if (key === 'isPasswordHidden')
@@ -28,21 +26,14 @@ export default function RegistrationScreen() {
     setUser((prev) => ({ ...prev, [key]: value }));
   };
 
-  const onPressRegistration = () => {
-    console.log(
-      `Login:${user.login}\nEmail:${user.email}\nPassword:${user.password}`
-    );
-    setUser(REGISTER_INITIAL_STATE);
+  const onPressLogin = () => {
+    console.log(`Email:${user.email}\nPassword:${user.password}`);
+    setUser(LOGIN_INITIAL_STATE);
   };
 
-  const onPressLogin = () => {
+  const onPressRegistration = () => {
     console.log('Login pressed');
   };
-
-  const onPressChangeAvatar = () => {
-    console.log('Change avatar');
-  };
-
   return (
     <>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -57,24 +48,10 @@ export default function RegistrationScreen() {
               style={styles.image}
             >
               <View style={styles.wrapper}>
-                {/* AVATAR */}
-                <View style={styles.avatar}>
-                  <StyledButton
-                    buttonStyles={styles.avatarButton}
-                    onPress={onPressChangeAvatar}
-                  >
-                    <CirclePlusSvg />
-                  </StyledButton>
-                </View>
                 {/* TITLE */}
-                <Text style={styles.title}>Реєстрація</Text>
+                <Text style={styles.title}>Увійти</Text>
                 {/* INPUTS */}
                 <View style={styles.formFields}>
-                  <Input
-                    placeholder="Логін"
-                    onChange={(text) => onChangeUserData('login', text)}
-                    value={user.login}
-                  />
                   <Input
                     placeholder="Адреса електронної пошти"
                     onChange={(text) => onChangeUserData('email', text)}
@@ -98,21 +75,25 @@ export default function RegistrationScreen() {
                     </StyledButton>
                   </View>
                 </View>
-                {/* Register */}
-                <StyledButton
-                  onPress={onPressRegistration}
-                  buttonStyles={styles.registerButton}
-                >
-                  <Text style={styles.registerButtonText}>Зареєструватися</Text>
-                </StyledButton>
                 {/* Login */}
-                <View style={styles.loginWrapper}>
-                  <Text style={styles.loginText}>Вже є акаунт? </Text>
+                <StyledButton
+                  onPress={onPressLogin}
+                  buttonStyles={styles.loginButton}
+                >
+                  <Text style={styles.loginButtonText}>Увійти</Text>
+                </StyledButton>
+                {/* Register */}
+                <View style={styles.registerWrapper}>
+                  <Text style={styles.registerText}>Немає акаунту? </Text>
                   <StyledButton
-                    onPress={onPressLogin}
-                    buttonStyles={styles.loginButton}
+                    onPress={onPressRegistration}
+                    buttonStyles={styles.registerButton}
                   >
-                    <Text style={styles.loginButtonText}>Увійти</Text>
+                    <View style={styles.registerButtonThumb}>
+                      <Text style={styles.registerButtonText}>
+                        Зареєструватися
+                      </Text>
+                    </View>
                   </StyledButton>
                 </View>
               </View>
@@ -122,22 +103,23 @@ export default function RegistrationScreen() {
       </TouchableWithoutFeedback>
     </>
   );
-}
+};
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   // MAIN CONTAINER
   container: {
     flex: 1,
-  },
-  // BACKGROUND IMAGE
+  }, // BACKGROUND IMAGE
   image: {
     flex: 1,
     justifyContent: 'flex-end',
   },
   // WRAPPER
   wrapper: {
-    paddingTop: 92,
-    paddingBottom: 79,
+    paddingTop: 32,
+    paddingBottom: 32,
     paddingHorizontal: 16,
     backgroundColor: colors.white,
     borderTopRightRadius: 25,
@@ -145,7 +127,7 @@ const styles = StyleSheet.create({
   },
   // TITLE
   title: {
-    marginBottom: 33,
+    marginBottom: 32,
     color: colors.black,
     textAlign: 'center',
     fontFamily: 'Roboto-Medium',
@@ -154,31 +136,11 @@ const styles = StyleSheet.create({
     lineHeight: 35,
     letterSpacing: 0.3,
   },
-
-  // AVATAR
-  avatar: {
-    position: 'absolute',
-    alignSelf: 'center',
-    top: -60,
-    width: 120,
-    height: 120,
-    backgroundColor: colors.light_gray,
-    borderRadius: 16,
-  },
-  avatarButton: {
-    position: 'absolute',
-    right: -12,
-    bottom: 12,
-    paddingVertical: 0,
-    backgroundColor: 'transparent',
-  },
-
   //FORM FIELDS
   formFields: {
     gap: 16,
     marginBottom: 43,
   },
-
   passwordField: {
     justifyContent: 'center',
   },
@@ -198,11 +160,11 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 
-  // REGISTER BUTTON STYLES
-  registerButton: {
+  // LOGIN BUTTON STYLES
+  loginButton: {
     marginBottom: 16,
   },
-  registerButtonText: {
+  loginButtonText: {
     color: colors.white,
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
@@ -210,27 +172,31 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 
-  // LOGIN BUTTON STYLES
-  loginWrapper: {
+  // REGISTER BUTTON STYLES
+  registerWrapper: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  loginButton: {
+  registerButton: {
     paddingVertical: 0,
     backgroundColor: 'transparent',
   },
-  loginText: {
+  registerText: {
     color: colors.blue,
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
     lineHeight: 19,
     fontWeight: '400',
   },
-  loginButtonText: {
+  registerButtonText: {
     color: colors.blue,
     fontFamily: 'Roboto-Regular',
     fontSize: 16,
     lineHeight: 19,
     fontWeight: '400',
+  },
+  registerButtonThumb: {
+    borderColor: colors.blue,
+    borderBottomWidth: 1,
   },
 });
