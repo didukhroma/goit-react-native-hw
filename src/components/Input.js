@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { colors } from '../styles/colors';
-import StyledButton from './StyledButton';
 
 const Input = ({
   placeholder,
@@ -10,6 +9,8 @@ const Input = ({
   onChange,
   secure = false,
   outerStyles,
+  icon,
+  children,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -27,8 +28,9 @@ const Input = ({
         onBlur={onBlur}
         secureTextEntry={secure}
       >
-        {/* <StyledButton></StyledButton> */}
+        {children}
       </TextInput>
+      <View style={styles.icon}>{icon}</View>
     </View>
   );
 };
@@ -52,5 +54,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderColor: colors.orange,
     color: colors.black,
+  },
+  icon: {
+    position: 'absolute',
+    left: 0,
+    top: 10,
   },
 });

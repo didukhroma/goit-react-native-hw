@@ -14,10 +14,14 @@ import Input from '../components/Input';
 import StyledButton from '../components/StyledButton';
 
 import { colors } from '../styles/colors';
-import { LOGIN_INITIAL_STATE } from '../helpers/constants';
+import { LOGIN_INITIAL_STATE } from '../constants/constants';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../context/authContext';
 
 const LoginScreen = () => {
   const [user, setUser] = useState(LOGIN_INITIAL_STATE);
+  const navigation = useNavigation();
+  const { profile, setProfile } = useAuth();
 
   const onChangeUserData = (key, value) => {
     if (key === 'isPasswordHidden')
@@ -27,12 +31,13 @@ const LoginScreen = () => {
   };
 
   const onPressLogin = () => {
-    console.log(`Email:${user.email}\nPassword:${user.password}`);
+    setProfile({ ...profile, ...user });
     setUser(LOGIN_INITIAL_STATE);
+    navigation.navigate('Home');
   };
 
   const onPressRegistration = () => {
-    console.log('Login pressed');
+    navigation.navigate('Registration');
   };
   return (
     <>
@@ -43,7 +48,7 @@ const LoginScreen = () => {
             style={styles.container}
           >
             <ImageBackground
-              source={require('../../assets/background.png')}
+              source={require('../../src/assets/images/background.png')}
               resizeMode="cover"
               style={styles.image}
             >

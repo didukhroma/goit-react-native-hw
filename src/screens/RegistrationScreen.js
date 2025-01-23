@@ -14,12 +14,16 @@ import Input from '../components/Input';
 import StyledButton from '../components/StyledButton';
 
 import { colors } from '../styles/colors';
-import { REGISTER_INITIAL_STATE } from '../helpers/constants';
+import { REGISTER_INITIAL_STATE } from '../constants/constants';
 
-import CirclePlusSvg from '../icons/CirclePlusSvg';
+import CirclePlusSvg from '../assets/icons/CirclePlusSvg';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../context/authContext';
 
 export default function RegistrationScreen() {
   const [user, setUser] = useState(REGISTER_INITIAL_STATE);
+  const navigation = useNavigation();
+  const { profile, setProfile } = useAuth();
 
   const onChangeUserData = (key, value) => {
     if (key === 'isPasswordHidden')
@@ -29,14 +33,13 @@ export default function RegistrationScreen() {
   };
 
   const onPressRegistration = () => {
-    console.log(
-      `Login:${user.login}\nEmail:${user.email}\nPassword:${user.password}`
-    );
+    setProfile({ ...profile, ...user });
     setUser(REGISTER_INITIAL_STATE);
+    navigation.navigate('Home');
   };
 
   const onPressLogin = () => {
-    console.log('Login pressed');
+    navigation.navigate('Login');
   };
 
   const onPressChangeAvatar = () => {
@@ -52,7 +55,7 @@ export default function RegistrationScreen() {
             style={styles.container}
           >
             <ImageBackground
-              source={require('../../assets/background.png')}
+              source={require('../../src/assets/images/background.png')}
               resizeMode="cover"
               style={styles.image}
             >
