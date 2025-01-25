@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Svg, { Circle, Path } from 'react-native-svg';
-// import { colors } from './colors';
+import { colors } from '../../styles/colors';
 
 const CirclePlusSvg = (props) => (
   <Svg {...props} width={25} height={25} fill="none">
-    <Circle cx={12.5} cy={12.5} r={12} fill="none" stroke="#FF6C00" />
+    <Circle cx={12.5} cy={12.5} r={12} fill="none" stroke={colors.orange} />
     <Path
-      fill="#FF6C00"
+      fill={colors.orange}
       fillRule="evenodd"
       d="M13 6h-1v6H6v1h6v6h1v-6h6v-1h-6V6Z"
       clipRule="evenodd"

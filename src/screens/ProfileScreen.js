@@ -1,4 +1,11 @@
-import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import StyledButton from '../components/StyledButton';
@@ -6,10 +13,14 @@ import CirclePlusSvg from '../assets/icons/CirclePlusSvg';
 import { useAuth } from '../context/authContext';
 import { colors } from '../styles/colors';
 import { PROFILE_INITIAL_STATE } from '../constants/constants';
+import { db } from '../db/db';
+import Post from '../components/Post';
 
 const ProfileScreen = () => {
   const { profile, setProfile } = useAuth();
   const navigation = useNavigation();
+
+  const posts = db;
 
   const onPressChangeAvatar = () => {
     console.log('change avatar');
@@ -21,45 +32,52 @@ const ProfileScreen = () => {
     navigation.navigate('Login');
   };
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require('../../src/assets/images/background.png')}
-        resizeMode="cover"
-        style={styles.image}
-      >
-        <View style={styles.wrapper}>
-          {/* AVATAR */}
-          <View style={styles.avatar}>
-            <Image
-              source={
-                profile.avatar
-                  ? { uri: profile.avatar }
-                  : require('../assets/images/placeholderImage.jpg')
-              }
-              style={{ borderRadius: 16 }}
-            ></Image>
+    <ScrollView>
+      <View style={styles.container}>
+        <ImageBackground
+          source={require('../../src/assets/images/background.png')}
+          resizeMode="cover"
+          style={styles.image}
+        >
+          <View style={styles.wrapper}>
+            {/* AVATAR */}
+            <View style={styles.avatar}>
+              <Image
+                source={
+                  profile.avatar
+                    ? { uri: profile.avatar }
+                    : require('../assets/images/placeholderImage.jpg')
+                }
+                style={{ borderRadius: 16 }}
+              ></Image>
+              <StyledButton
+                buttonStyles={styles.avatarButton}
+                onPress={onPressChangeAvatar}
+              >
+                <CirclePlusSvg />
+              </StyledButton>
+            </View>
             <StyledButton
-              buttonStyles={styles.avatarButton}
-              onPress={onPressChangeAvatar}
+              buttonStyles={styles.logoutButton}
+              onPress={onPressLogout}
             >
-              <CirclePlusSvg />
+              <Ionicons
+                name="log-out-outline"
+                size={24}
+                color={colors.dark_gray}
+              />
             </StyledButton>
+            {/* TITLE */}
+            <Text style={styles.title}>{profile.login}</Text>
+            <View>
+              {posts.map((post) => (
+                <Post post={post} key={post.id} />
+              ))}
+            </View>
           </View>
-          <StyledButton
-            buttonStyles={styles.logoutButton}
-            onPress={onPressLogout}
-          >
-            <Ionicons
-              name="log-out-outline"
-              size={24}
-              color={colors.dark_gray}
-            />
-          </StyledButton>
-          {/* TITLE */}
-          <Text style={styles.title}>{profile.login}</Text>
-        </View>
-      </ImageBackground>
-    </View>
+        </ImageBackground>
+      </View>
+    </ScrollView>
   );
 };
 

@@ -15,7 +15,7 @@ export const PROFILE_INITIAL_STATE = {
   login: 'Test user',
   email: 'test@test.com',
   password: '',
-  isLoggedIn: false,
+  isLoggedIn: true,
 };
 
 export const POST_INITIAL_STATE = {

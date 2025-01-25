@@ -1,21 +1,18 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-import PostsScreen from '../screens/PostsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CreatePostsScreen from '../screens/CreatePostsScreen';
 import { colors } from '../styles/colors';
-import { useAuth } from '../context/authContext';
 import { StyleSheet, View } from 'react-native';
+import PostsNavigator from './PostsNavigator';
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
-  const { profile, setProfile } = useAuth();
-
   return (
     <Tab.Navigator
-      initialRouteName="Posts"
+      initialRouteName="PostsNavigator"
       screenOptions={{
         tabBarShowLabel: false,
         animation: 'fade',
@@ -40,28 +37,14 @@ const BottomTabNavigator = () => {
       }}
     >
       <Tab.Screen
-        name="Posts"
-        component={PostsScreen}
+        name="PostsNavigator"
+        component={PostsNavigator}
         options={({ navigation }) => ({
-          title: 'Публікації',
+          headerShown: false,
           tabBarIcon: ({ focused, color }) => (
             <View style={[styles.button, focused && styles.buttonActive]}>
               <Ionicons name="grid-outline" size={20} color={color} />
             </View>
-          ),
-
-          headerRight: () => (
-            <Ionicons
-              name="log-out-outline"
-              size={30}
-              color={colors.dark_gray}
-              style={{ marginRight: 10 }}
-              onPress={() => {
-                setProfile((prev) => ({ ...prev, isLoggedIn: false }));
-                navigation.navigate('Login');
-                console.log('logout');
-              }}
-            />
           ),
         })}
       />
@@ -92,7 +75,7 @@ const BottomTabNavigator = () => {
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
-        options={({ navigation }) => ({
+        options={() => ({
           headerShown: false,
           tabBarIcon: ({ focused, color }) => (
             <View style={[styles.button, focused && styles.buttonActive]}>
@@ -108,8 +91,6 @@ const BottomTabNavigator = () => {
 export default BottomTabNavigator;
 
 const styles = StyleSheet.create({
-  //TAB BUTTON
-
   button: {
     backgroundColor: colors.white,
     borderRadius: 20,

@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -14,9 +15,15 @@ import { colors } from '../styles/colors';
 import StyledButton from '../components/StyledButton';
 import { POST_INITIAL_STATE } from '../constants/constants';
 import { useState } from 'react';
+import Camera from '../components/Camera';
+import { useNavigation } from '@react-navigation/native';
+import { createPost } from '../db/db';
 
 const CreatePostsScreen = () => {
   const [post, setPost] = useState(POST_INITIAL_STATE);
+  const [showCamera, setShowCamera] = useState(true);
+
+  const navigation = useNavigation();
 
   const onChangePostData = (key, value) => {
     if (post.image && post.title && post.location) {
@@ -27,17 +34,18 @@ const CreatePostsScreen = () => {
 
   const clearAllData = () => {
     setPost(POST_INITIAL_STATE);
+    setShowCamera(true);
   };
 
   const onPressPublicationButton = () => {
     if (post.isEmptyPost) return;
-    console.log('Post created');
+    createPost(post);
     clearAllData();
+    navigation.goBack();
   };
 
-  //TODO: Add image upload functionality and camera functionality
-  const onPressCamera = () => {
-    console.log('Press camera');
+  const takePhoto = async (imageURI) => {
+    onChangePostData('image', imageURI);
   };
 
   return (
@@ -49,33 +57,25 @@ const CreatePostsScreen = () => {
             style={styles.container}
           >
             <View style={styles.thumb}>
-              <View style={styles.imageWrapper}>
-                <View style={styles.imageThumb}>
-                  <View
-                    style={[
-                      styles.cameraWrapper,
-                      post.image && styles.cameraWrapperActive,
-                    ]}
-                  >
-                    <Ionicons
-                      name="camera"
-                      size={24}
-                      color={post.image ? colors.white : colors.dark_gray}
-                    />
-                  </View>
-                </View>
-                <Text style={styles.imageText}>Завантажте фото</Text>
-              </View>
+              <Camera
+                onPressTakePicture={takePhoto}
+                image={post.image}
+                showCamera={showCamera}
+                setShowCamera={setShowCamera}
+              />
+
               <View style={styles.inputWrapper}>
                 <Input
                   placeholder="Назва..."
                   onChange={(text) => onChangePostData('title', text)}
                   outerStyles={styles.input}
+                  value={post.title}
                 ></Input>
                 <Input
                   placeholder="Місцевість..."
                   onChange={(text) => onChangePostData('location', text)}
                   outerStyles={[styles.input, styles.inputLocation]}
+                  value={post.location}
                   icon={
                     <Ionicons
                       name="location-outline"
@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: colors.white,
     justifyContent: 'space-between',
+    minHeight: Dimensions.get('window').height,
   },
   thumb: {
     gap: 32,
@@ -141,6 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray,
     marginBottom: 8,
     borderRadius: 16,
+    overflow: 'hidden',
   },
   imageText: {
     color: colors.dark_gray,
@@ -148,15 +150,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 400,
   },
-  cameraWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: colors.white,
-  },
-  cameraWrapperActive: { backgroundColor: 'rgba(255, 255, 255, 0.3)' },
+
   inputWrapper: {
     gap: 16,
     marginBottom: 32,

@@ -27,6 +27,7 @@ const Input = ({
         onFocus={onFocus}
         onBlur={onBlur}
         secureTextEntry={secure}
+        // multiline={multiline}
       >
         {children}
       </TextInput>
