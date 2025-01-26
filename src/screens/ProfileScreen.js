@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     justifyContent: 'flex-end',
+    paddingTop: 147,
   },
   // WRAPPER
   wrapper: {

@@ -6,6 +6,10 @@ export const db = [
     uri: '',
     title: 'Forest',
     location: 'Kyiv Region, Ukraine',
+    coords: {
+      latitude: 37.78825,
+      longitude: -122.4324,
+    },
     likes: 1,
     comments: [
       {
@@ -27,6 +31,10 @@ export const db = [
     uri: '',
     title: 'Forest',
     location: 'Kyiv Region, Ukraine',
+    coords: {
+      latitude: 37.78825,
+      longitude: -122.4324,
+    },
     likes: 0,
     comments: [
       {
@@ -62,13 +70,13 @@ export const addCommentToDB = (postId, text) => {
   db[index].comments.push(data);
 };
 
-export const createPost = ({ image, title, location }) => {
-  console.log(image);
+export const createPost = ({ image, title, location, coords }) => {
   db.push({
     id: uuid.v4(),
     uri: image,
     title,
     location,
+    coords,
     likes: 0,
     comments: [],
   });

@@ -3,7 +3,7 @@ import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
 
 import { AuthProvider } from './src/context/authContext';
-import AuthNavigator from './src/navigation/AuthNavigator';
+import MainNavigator from './src/navigation/MainNavigator';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -19,7 +19,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <AuthProvider>
-        <AuthNavigator />
+        <MainNavigator />
       </AuthProvider>
     </NavigationContainer>
   );

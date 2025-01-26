@@ -18,6 +18,7 @@ import { useState } from 'react';
 import Camera from '../components/Camera';
 import { useNavigation } from '@react-navigation/native';
 import { createPost } from '../db/db';
+import * as Location from 'expo-location';
 
 const CreatePostsScreen = () => {
   const [post, setPost] = useState(POST_INITIAL_STATE);
@@ -26,10 +27,13 @@ const CreatePostsScreen = () => {
   const navigation = useNavigation();
 
   const onChangePostData = (key, value) => {
+    setPost((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const checkForm = () => {
     if (post.image && post.title && post.location) {
       setPost((prev) => ({ ...prev, isEmptyPost: false }));
     }
-    setPost((prev) => ({ ...prev, [key]: value }));
   };
 
   const clearAllData = () => {
@@ -37,8 +41,22 @@ const CreatePostsScreen = () => {
     setShowCamera(true);
   };
 
-  const onPressPublicationButton = () => {
+  const onPressPublicationButton = async () => {
     if (post.isEmptyPost) return;
+
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission to access location was denied');
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+
+    onChangePostData('coords', {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    });
+
     createPost(post);
     clearAllData();
     navigation.goBack();
@@ -46,6 +64,7 @@ const CreatePostsScreen = () => {
 
   const takePhoto = async (imageURI) => {
     onChangePostData('image', imageURI);
+    checkForm();
   };
 
   return (
@@ -70,12 +89,14 @@ const CreatePostsScreen = () => {
                   onChange={(text) => onChangePostData('title', text)}
                   outerStyles={styles.input}
                   value={post.title}
+                  onBlurInput={checkForm}
                 ></Input>
                 <Input
                   placeholder="Місцевість..."
                   onChange={(text) => onChangePostData('location', text)}
                   outerStyles={[styles.input, styles.inputLocation]}
                   value={post.location}
+                  onBlurInput={checkForm}
                   icon={
                     <Ionicons
                       name="location-outline"

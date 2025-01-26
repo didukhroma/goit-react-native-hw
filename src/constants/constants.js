@@ -22,5 +22,9 @@ export const POST_INITIAL_STATE = {
   image: '',
   title: '',
   location: '',
+  coords: {
+    latitude: 0,
+    longitude: 0,
+  },
   isEmptyPost: true,
 };

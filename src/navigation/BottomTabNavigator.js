@@ -1,18 +1,18 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+import PostsScreen from '../screens/PostsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CreatePostsScreen from '../screens/CreatePostsScreen';
 import { colors } from '../styles/colors';
 import { StyleSheet, View } from 'react-native';
-import PostsNavigator from './PostsNavigator';
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName="PostsNavigator"
+      initialRouteName="Posts"
       screenOptions={{
         tabBarShowLabel: false,
         animation: 'fade',
@@ -37,14 +37,26 @@ const BottomTabNavigator = () => {
       }}
     >
       <Tab.Screen
-        name="PostsNavigator"
-        component={PostsNavigator}
+        name="Posts"
+        component={PostsScreen}
         options={({ navigation }) => ({
-          headerShown: false,
+          title: 'Публікації',
           tabBarIcon: ({ focused, color }) => (
             <View style={[styles.button, focused && styles.buttonActive]}>
               <Ionicons name="grid-outline" size={20} color={color} />
             </View>
+          ),
+          headerRight: () => (
+            <Ionicons
+              name="log-out-outline"
+              size={30}
+              color={colors.dark_gray}
+              style={{ marginRight: 10 }}
+              onPress={() => {
+                setProfile((prev) => ({ ...prev, isLoggedIn: false }));
+                navigation.navigate('Login');
+              }}
+            />
           ),
         })}
       />

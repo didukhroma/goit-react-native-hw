@@ -11,11 +11,15 @@ const Input = ({
   outerStyles,
   icon,
   children,
+  onBlurInput,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const onFocus = () => setIsFocused(true);
-  const onBlur = () => setIsFocused(false);
+  const onBlur = () => {
+    onBlurInput();
+    setIsFocused(false);
+  };
 
   return (
     <View styles={styles.wrapper}>
@@ -27,7 +31,6 @@ const Input = ({
         onFocus={onFocus}
         onBlur={onBlur}
         secureTextEntry={secure}
-        // multiline={multiline}
       >
         {children}
       </TextInput>
