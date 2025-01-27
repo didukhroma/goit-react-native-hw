@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { useAuth } from '../context/authContext';
+// import { useAuth } from '../context/authContext';
 
 import RegistrationScreen from '../screens/RegistrationScreen';
 import LoginScreen from '../screens/LoginScreen';
@@ -11,9 +11,11 @@ import { colors } from '../styles/colors';
 const MainStack = createStackNavigator();
 
 const MainNavigator = () => {
-  const {
-    profile: { isLoggedIn },
-  } = useAuth();
+  //   const {
+  //     profile: { isLoggedIn },
+  //   } = useAuth();
+
+  const isLoggedIn = false;
   return (
     <MainStack.Navigator
       initialRouteName={isLoggedIn ? 'Home' : 'Login'}

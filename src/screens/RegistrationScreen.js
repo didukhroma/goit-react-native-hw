@@ -18,12 +18,12 @@ import { REGISTER_INITIAL_STATE } from '../constants/constants';
 
 import CirclePlusSvg from '../assets/icons/CirclePlusSvg';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../context/authContext';
+// import { useAuth } from '../context/authContext';
 
 export default function RegistrationScreen() {
   const [user, setUser] = useState(REGISTER_INITIAL_STATE);
   const navigation = useNavigation();
-  const { profile, setProfile } = useAuth();
+  // const { profile, setProfile } = useAuth();
 
   const onChangeUserData = (key, value) => {
     if (key === 'isPasswordHidden')
@@ -33,9 +33,10 @@ export default function RegistrationScreen() {
   };
 
   const onPressRegistration = () => {
-    setProfile({ ...profile, ...user });
-    setUser(REGISTER_INITIAL_STATE);
-    navigation.navigate('Home');
+    // setProfile({ ...profile, ...user });
+    // setUser(REGISTER_INITIAL_STATE);
+    // navigation.navigate('Home');
+    console.log('press registration');
   };
 
   const onPressLogin = () => {

@@ -16,12 +16,12 @@ import StyledButton from '../components/StyledButton';
 import { colors } from '../styles/colors';
 import { LOGIN_INITIAL_STATE } from '../constants/constants';
 import { useNavigation } from '@react-navigation/native';
-import { useAuth } from '../context/authContext';
+// import { useAuth } from '../context/authContext';
 
 const LoginScreen = () => {
   const [user, setUser] = useState(LOGIN_INITIAL_STATE);
   const navigation = useNavigation();
-  const { profile, setProfile } = useAuth();
+  // const { profile, setProfile } = useAuth();
 
   const onChangeUserData = (key, value) => {
     if (key === 'isPasswordHidden')
@@ -31,9 +31,10 @@ const LoginScreen = () => {
   };
 
   const onPressLogin = () => {
-    setProfile({ ...profile, ...user });
-    setUser(LOGIN_INITIAL_STATE);
-    navigation.navigate('Home');
+    // setProfile({ ...profile, ...user });
+    console.log(login);
+    // setUser(LOGIN_INITIAL_STATE);
+    // navigation.navigate('Home');
   };
 
   const onPressRegistration = () => {

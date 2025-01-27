@@ -17,7 +17,7 @@ const Input = ({
 
   const onFocus = () => setIsFocused(true);
   const onBlur = () => {
-    onBlurInput();
+    onBlurInput && onBlurInput();
     setIsFocused(false);
   };
 
