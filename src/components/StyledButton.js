@@ -1,11 +1,26 @@
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 
 import { colors } from '../styles/colors';
 
-const StyledButton = ({ children, onPress, buttonStyles }) => {
+const StyledButton = ({
+  children,
+  onPress,
+  buttonStyles,
+  disabled = false,
+  text,
+}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.button, buttonStyles]}>
+    <TouchableOpacity
+      onPress={!disabled && onPress}
+      style={[styles.button, disabled && styles.disabledButton, buttonStyles]}
+      disabled={disabled}
+    >
       {children}
+      {text && (
+        <Text style={[styles.text, disabled && styles.disabledText]}>
+          {text}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };
@@ -18,5 +33,18 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: 'center',
     borderRadius: 100,
+  },
+  disabledButton: {
+    backgroundColor: colors.light_gray,
+  },
+  text: {
+    color: colors.white,
+    fontFamily: 'Roboto-Regular',
+    fontSize: 16,
+    lineHeight: 19,
+    fontWeight: '400',
+  },
+  disabledText: {
+    color: colors.dark_gray,
   },
 });

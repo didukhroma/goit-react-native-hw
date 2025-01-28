@@ -10,29 +10,40 @@ import { setUserInfo, clearUserInfo } from '../redux/reducers/userSlice';
 import { addUser, getUser } from './firestore';
 
 // Функція для реєстрації користувача
-export const registerDB = async (email, password, name) => {
+export const registerUser = async ({ email, password, login }, dispatch) => {
   try {
     const credentials = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-
-    console.log(credentials);
     const user = credentials.user;
-    console.log(user);
 
-    await addUser(user.uid, { uid: user.uid, email: user.email, name });
+    const userData = {
+      uid: user.uid,
+      email: user.email || '',
+      displayName: login || '',
+    };
+
+    await addUser(user.uid, {
+      ...userData,
+    });
+
+    dispatch(
+      setUserInfo({
+        ...userData,
+      })
+    );
   } catch (error) {
     console.log('SIGNUP ERROR:', error);
   }
 };
 
 // Функція для логіну користувача та збереження його в Redux
-export const loginDB = async ({ email, password }, dispatch) => {
+export const loginUser = async ({ email, password }, dispatch) => {
   try {
     const credentials = await signInWithEmailAndPassword(auth, email, password);
-    console.log(credentials);
+
     const user = credentials.user;
 
     dispatch(
@@ -50,7 +61,7 @@ export const loginDB = async ({ email, password }, dispatch) => {
 };
 
 // Функція для логауту
-export const logoutDB = async (dispatch) => {
+export const logoutUser = async (dispatch) => {
   try {
     await signOut(auth);
     // Очистити інформацію про користувача у Redux

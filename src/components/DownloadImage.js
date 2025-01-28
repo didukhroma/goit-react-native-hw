@@ -4,7 +4,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import StyledButton from './StyledButton';
 import { colors } from '../styles/colors';
 
-const DownloadImage = ({ showCamera, onPressDownload }) => {
+const DownloadImage = ({
+  showCamera,
+  onPressDownload,
+  children,
+  outerContainerStyles,
+  outerButtonStyles,
+}) => {
   const pickImage = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -27,11 +33,12 @@ const DownloadImage = ({ showCamera, onPressDownload }) => {
     }
   };
   return (
-    <View>
-      <StyledButton onPress={pickImage} buttonStyles={styles.downloadButton}>
-        <Text style={styles.imageText}>
+    <View style={[styles.container, outerContainerStyles]}>
+      <StyledButton onPress={pickImage} buttonStyles={outerButtonStyles}>
+        {children}
+        {/* <Text style={styles.imageText}>
           {showCamera ? 'Завантажте фото' : 'Редагувати фото'}
-        </Text>
+        </Text> */}
       </StyledButton>
     </View>
   );

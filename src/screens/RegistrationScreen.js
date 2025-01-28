@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  ImageBackground,
   View,
   Text,
   StyleSheet,
@@ -9,21 +8,26 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { registerUser } from '../utils/auth';
+import { useDispatch } from 'react-redux';
 
 import Input from '../components/Input';
 import StyledButton from '../components/StyledButton';
+import StyledImageBackground from '../components/StyledImageBackground';
 
-import { colors } from '../styles/colors';
+import CircleCloseSvg from '../assets/icons/CircleCloseSvg';
+import CirclePlusSvg from '../assets/icons/CirclePlusSvg';
+
 import { REGISTER_INITIAL_STATE } from '../constants/constants';
 
-import CirclePlusSvg from '../assets/icons/CirclePlusSvg';
-import { useNavigation } from '@react-navigation/native';
-// import { useAuth } from '../context/authContext';
+import { colors } from '../styles/colors';
+import Avatar from '../components/Avatar';
 
 export default function RegistrationScreen() {
   const [user, setUser] = useState(REGISTER_INITIAL_STATE);
   const navigation = useNavigation();
-  // const { profile, setProfile } = useAuth();
+  const dispatch = useDispatch();
 
   const onChangeUserData = (key, value) => {
     if (key === 'isPasswordHidden')
@@ -32,19 +36,34 @@ export default function RegistrationScreen() {
     setUser((prev) => ({ ...prev, [key]: value }));
   };
 
-  const onPressRegistration = () => {
-    // setProfile({ ...profile, ...user });
-    // setUser(REGISTER_INITIAL_STATE);
-    // navigation.navigate('Home');
-    console.log('press registration');
+  const onPressRegistration = async () => {
+    if (!user.isFormFilled) return;
+    const { email, password, login } = user;
+
+    await registerUser({ email, password, login }, dispatch);
   };
 
   const onPressLogin = () => {
     navigation.navigate('Login');
   };
 
-  const onPressChangeAvatar = () => {
-    console.log('Change avatar');
+  const onPressChangeAvatar = (uri) => {
+    if (user.photo) {
+      return onChangeUserData('photo', '');
+    }
+    onChangeUserData('photo', uri);
+    checkFormFilled();
+  };
+
+  const checkFormFilled = () => {
+    // if (user.email && user.password && user.login && user.photo) {
+    //   setUser((prev) => ({ ...prev, isFormFilled: true }));
+    // }
+
+    //without user.photo for testing
+    if (user.email && user.password && user.login) {
+      setUser((prev) => ({ ...prev, isFormFilled: true }));
+    }
   };
 
   return (
@@ -55,21 +74,15 @@ export default function RegistrationScreen() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.container}
           >
-            <ImageBackground
+            <StyledImageBackground
               source={require('../../src/assets/images/background.png')}
-              resizeMode="cover"
-              style={styles.image}
             >
               <View style={styles.wrapper}>
                 {/* AVATAR */}
-                <View style={styles.avatar}>
-                  <StyledButton
-                    buttonStyles={styles.avatarButton}
-                    onPress={onPressChangeAvatar}
-                  >
-                    <CirclePlusSvg />
-                  </StyledButton>
-                </View>
+                <Avatar
+                  photo={user.photo}
+                  onPressChangeAvatar={onPressChangeAvatar}
+                />
                 {/* TITLE */}
                 <Text style={styles.title}>Реєстрація</Text>
                 {/* INPUTS */}
@@ -78,11 +91,13 @@ export default function RegistrationScreen() {
                     placeholder="Логін"
                     onChange={(text) => onChangeUserData('login', text)}
                     value={user.login}
+                    onBlurInput={checkFormFilled}
                   />
                   <Input
                     placeholder="Адреса електронної пошти"
                     onChange={(text) => onChangeUserData('email', text)}
                     value={user.email}
+                    onBlurInput={checkFormFilled}
                   />
                   <View style={styles.passwordField}>
                     <Input
@@ -91,6 +106,7 @@ export default function RegistrationScreen() {
                       value={user.password}
                       secure={user.isPasswordHidden}
                       outerStyles={styles.passwordInput}
+                      onBlurInput={checkFormFilled}
                     />
                     <StyledButton
                       onPress={() => onChangeUserData('isPasswordHidden')}
@@ -106,8 +122,10 @@ export default function RegistrationScreen() {
                 <StyledButton
                   onPress={onPressRegistration}
                   buttonStyles={styles.registerButton}
+                  disabled={!user.isFormFilled}
+                  text={'Зареєструватися'}
                 >
-                  <Text style={styles.registerButtonText}>Зареєструватися</Text>
+                  {/* <Text style={styles.registerButtonText}>Зареєструватися</Text> */}
                 </StyledButton>
                 {/* Login */}
                 <View style={styles.loginWrapper}>
@@ -120,7 +138,7 @@ export default function RegistrationScreen() {
                   </StyledButton>
                 </View>
               </View>
-            </ImageBackground>
+            </StyledImageBackground>
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
@@ -133,11 +151,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  // BACKGROUND IMAGE
-  image: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
+
   // WRAPPER
   wrapper: {
     paddingTop: 92,
@@ -157,24 +171,6 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     lineHeight: 35,
     letterSpacing: 0.3,
-  },
-
-  // AVATAR
-  avatar: {
-    position: 'absolute',
-    alignSelf: 'center',
-    top: -60,
-    width: 120,
-    height: 120,
-    backgroundColor: colors.light_gray,
-    borderRadius: 16,
-  },
-  avatarButton: {
-    position: 'absolute',
-    right: -12,
-    bottom: 12,
-    paddingVertical: 0,
-    backgroundColor: 'transparent',
   },
 
   //FORM FIELDS
@@ -205,13 +201,6 @@ const styles = StyleSheet.create({
   // REGISTER BUTTON STYLES
   registerButton: {
     marginBottom: 16,
-  },
-  registerButtonText: {
-    color: colors.white,
-    fontFamily: 'Roboto-Regular',
-    fontSize: 16,
-    lineHeight: 19,
-    fontWeight: '400',
   },
 
   // LOGIN BUTTON STYLES

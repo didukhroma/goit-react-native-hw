@@ -16,11 +16,16 @@ import StyledButton from '../components/StyledButton';
 import { colors } from '../styles/colors';
 import { LOGIN_INITIAL_STATE } from '../constants/constants';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../utils/auth';
+import StyledImageBackground from '../components/StyledImageBackground';
 // import { useAuth } from '../context/authContext';
 
 const LoginScreen = () => {
   const [user, setUser] = useState(LOGIN_INITIAL_STATE);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   // const { profile, setProfile } = useAuth();
 
   const onChangeUserData = (key, value) => {
@@ -30,13 +35,17 @@ const LoginScreen = () => {
     setUser((prev) => ({ ...prev, [key]: value }));
   };
 
-  const onPressLogin = () => {
-    // setProfile({ ...profile, ...user });
-    console.log(login);
-    // setUser(LOGIN_INITIAL_STATE);
-    // navigation.navigate('Home');
+  const onPressLogin = async () => {
+    const { email, password } = user;
+
+    await loginUser({ email, password }, dispatch);
   };
 
+  const checkFormFilled = () => {
+    if (user.email && user.password) {
+      setUser((prev) => ({ ...prev, isFormFilled: true }));
+    }
+  };
   const onPressRegistration = () => {
     navigation.navigate('Registration');
   };
@@ -48,10 +57,8 @@ const LoginScreen = () => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.container}
           >
-            <ImageBackground
+            <StyledImageBackground
               source={require('../../src/assets/images/background.png')}
-              resizeMode="cover"
-              style={styles.image}
             >
               <View style={styles.wrapper}>
                 {/* TITLE */}
@@ -62,6 +69,7 @@ const LoginScreen = () => {
                     placeholder="Адреса електронної пошти"
                     onChange={(text) => onChangeUserData('email', text)}
                     value={user.email}
+                    onBlurInput={checkFormFilled}
                   />
                   <View style={styles.passwordField}>
                     <Input
@@ -70,6 +78,7 @@ const LoginScreen = () => {
                       value={user.password}
                       secure={user.isPasswordHidden}
                       outerStyles={styles.passwordInput}
+                      onBlurInput={checkFormFilled}
                     />
                     <StyledButton
                       onPress={() => onChangeUserData('isPasswordHidden')}
@@ -82,12 +91,13 @@ const LoginScreen = () => {
                   </View>
                 </View>
                 {/* Login */}
+
                 <StyledButton
-                  onPress={onPressLogin}
+                  onPress={onPressRegistration}
                   buttonStyles={styles.loginButton}
-                >
-                  <Text style={styles.loginButtonText}>Увійти</Text>
-                </StyledButton>
+                  disabled={!user.isFormFilled}
+                  text={'Увійти'}
+                ></StyledButton>
                 {/* Register */}
                 <View style={styles.registerWrapper}>
                   <Text style={styles.registerText}>Немає акаунту? </Text>
@@ -103,7 +113,7 @@ const LoginScreen = () => {
                   </StyledButton>
                 </View>
               </View>
-            </ImageBackground>
+            </StyledImageBackground>
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
@@ -117,10 +127,6 @@ const styles = StyleSheet.create({
   // MAIN CONTAINER
   container: {
     flex: 1,
-  }, // BACKGROUND IMAGE
-  image: {
-    flex: 1,
-    justifyContent: 'flex-end',
   },
   // WRAPPER
   wrapper: {

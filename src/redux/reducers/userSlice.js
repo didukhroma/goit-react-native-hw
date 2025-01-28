@@ -4,7 +4,6 @@ const initialState = {
   userInfo: null,
 };
 
-// Створення slice для користувача
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -16,10 +15,12 @@ const userSlice = createSlice({
       state.userInfo = null;
     },
   },
+  selectors: {
+    selectInfo: (state) => state.userInfo,
+  },
 });
 
-// Експорт дій для використання у компонентах
 export const { setUserInfo, clearUserInfo } = userSlice.actions;
+export const { selectInfo } = userSlice.selectors;
 
-// Експорт ред'юсера для підключення до Store
 export default userSlice.reducer;

@@ -6,10 +6,13 @@ import ProfileScreen from '../screens/ProfileScreen';
 import CreatePostsScreen from '../screens/CreatePostsScreen';
 import { colors } from '../styles/colors';
 import { StyleSheet, View } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../utils/auth';
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  const dispatch = useDispatch();
   return (
     <Tab.Navigator
       initialRouteName="Posts"
@@ -53,7 +56,7 @@ const BottomTabNavigator = () => {
               color={colors.dark_gray}
               style={{ marginRight: 10 }}
               onPress={() => {
-                setProfile((prev) => ({ ...prev, isLoggedIn: false }));
+                logoutUser(dispatch);
                 navigation.navigate('Login');
               }}
             />
