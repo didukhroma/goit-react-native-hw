@@ -38,9 +38,10 @@ export default function RegistrationScreen() {
 
   const onPressRegistration = async () => {
     if (!user.isFormFilled) return;
-    const { email, password, login } = user;
 
-    await registerUser({ email, password, login }, dispatch);
+    const { email, password, login, photo } = user;
+
+    await registerUser({ email, password, login, photo }, dispatch);
   };
 
   const onPressLogin = () => {
@@ -48,20 +49,13 @@ export default function RegistrationScreen() {
   };
 
   const onPressChangeAvatar = (uri) => {
-    if (user.photo) {
-      return onChangeUserData('photo', '');
-    }
     onChangeUserData('photo', uri);
+
     checkFormFilled();
   };
 
   const checkFormFilled = () => {
-    // if (user.email && user.password && user.login && user.photo) {
-    //   setUser((prev) => ({ ...prev, isFormFilled: true }));
-    // }
-
-    //without user.photo for testing
-    if (user.email && user.password && user.login) {
+    if (user.email && user.password && user.login && user.photo) {
       setUser((prev) => ({ ...prev, isFormFilled: true }));
     }
   };
@@ -124,9 +118,7 @@ export default function RegistrationScreen() {
                   buttonStyles={styles.registerButton}
                   disabled={!user.isFormFilled}
                   text={'Зареєструватися'}
-                >
-                  {/* <Text style={styles.registerButtonText}>Зареєструватися</Text> */}
-                </StyledButton>
+                ></StyledButton>
                 {/* Login */}
                 <View style={styles.loginWrapper}>
                   <Text style={styles.loginText}>Вже є акаунт? </Text>

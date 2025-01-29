@@ -57,7 +57,6 @@ const BottomTabNavigator = () => {
               style={{ marginRight: 10 }}
               onPress={() => {
                 logoutUser(dispatch);
-                navigation.navigate('Login');
               }}
             />
           ),

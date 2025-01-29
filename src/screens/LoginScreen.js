@@ -93,7 +93,7 @@ const LoginScreen = () => {
                 {/* Login */}
 
                 <StyledButton
-                  onPress={onPressRegistration}
+                  onPress={onPressLogin}
                   buttonStyles={styles.loginButton}
                   disabled={!user.isFormFilled}
                   text={'Увійти'}

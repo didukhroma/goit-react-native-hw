@@ -15,8 +15,13 @@ import { colors } from '../styles/colors';
 import { PROFILE_INITIAL_STATE } from '../constants/constants';
 import { db } from '../db/db';
 import Post from '../components/Post';
+import { selectInfo } from '../redux/reducers/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser } from '../utils/auth';
 
 const ProfileScreen = () => {
+  const user = useSelector(selectInfo);
+  const dispatch = useDispatch();
   const { profile, setProfile } = useAuth();
   const navigation = useNavigation();
 
@@ -27,56 +32,57 @@ const ProfileScreen = () => {
   };
 
   const onPressLogout = () => {
-    console.log('logout');
-    setProfile(PROFILE_INITIAL_STATE);
-    navigation.navigate('Login');
+    logoutUser(dispatch);
   };
+
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <ImageBackground
-          source={require('../../src/assets/images/background.png')}
-          resizeMode="cover"
-          style={styles.image}
-        >
-          <View style={styles.wrapper}>
-            {/* AVATAR */}
-            <View style={styles.avatar}>
-              <Image
-                source={
-                  profile.avatar
-                    ? { uri: profile.avatar }
-                    : require('../assets/images/placeholderImage.jpg')
-                }
-                style={{ borderRadius: 16 }}
-              ></Image>
+      {user && (
+        <View style={styles.container}>
+          <ImageBackground
+            source={require('../../src/assets/images/background.png')}
+            resizeMode="cover"
+            style={styles.image}
+          >
+            <View style={styles.wrapper}>
+              {/* AVATAR */}
+              <View style={styles.avatar}>
+                <Image
+                  source={
+                    profile.avatar
+                      ? { uri: profile.avatar }
+                      : require('../assets/images/placeholderImage.jpg')
+                  }
+                  style={{ borderRadius: 16 }}
+                ></Image>
+                <StyledButton
+                  buttonStyles={styles.avatarButton}
+                  onPress={onPressChangeAvatar}
+                >
+                  <CirclePlusSvg />
+                </StyledButton>
+              </View>
               <StyledButton
-                buttonStyles={styles.avatarButton}
-                onPress={onPressChangeAvatar}
+                buttonStyles={styles.logoutButton}
+                onPress={onPressLogout}
               >
-                <CirclePlusSvg />
+                <Ionicons
+                  name="log-out-outline"
+                  size={24}
+                  color={colors.dark_gray}
+                />
               </StyledButton>
+              {/* TITLE */}
+              <Text style={styles.title}>{profile.login}</Text>
+              <View>
+                {posts.map((post) => (
+                  <Post post={post} key={post.id} />
+                ))}
+              </View>
             </View>
-            <StyledButton
-              buttonStyles={styles.logoutButton}
-              onPress={onPressLogout}
-            >
-              <Ionicons
-                name="log-out-outline"
-                size={24}
-                color={colors.dark_gray}
-              />
-            </StyledButton>
-            {/* TITLE */}
-            <Text style={styles.title}>{profile.login}</Text>
-            <View>
-              {posts.map((post) => (
-                <Post post={post} key={post.id} />
-              ))}
-            </View>
-          </View>
-        </ImageBackground>
-      </View>
+          </ImageBackground>
+        </View>
+      )}
     </ScrollView>
   );
 };

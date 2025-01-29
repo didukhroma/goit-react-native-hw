@@ -7,10 +7,12 @@ import {
 } from 'firebase/auth';
 import { auth } from '../../config';
 import { setUserInfo, clearUserInfo } from '../redux/reducers/userSlice';
-import { addUser, getUser } from './firestore';
+import { addUser, getUser, uploadImage } from './firestore';
 
-// Функція для реєстрації користувача
-export const registerUser = async ({ email, password, login }, dispatch) => {
+export const registerUser = async (
+  { email, password, login, photo },
+  dispatch
+) => {
   try {
     const credentials = await createUserWithEmailAndPassword(
       auth,
@@ -19,10 +21,13 @@ export const registerUser = async ({ email, password, login }, dispatch) => {
     );
     const user = credentials.user;
 
+    const imageUrl = await uploadImage(user.uid, photo, 'avatar');
+
     const userData = {
       uid: user.uid,
       email: user.email || '',
       displayName: login || '',
+      photo: imageUrl || '',
     };
 
     await addUser(user.uid, {
@@ -46,15 +51,18 @@ export const loginUser = async ({ email, password }, dispatch) => {
 
     const user = credentials.user;
 
+    const userData = {
+      uid: user.uid,
+      email: user.email || '',
+      displayName: user.displayName || '',
+      photo: user.photo || '',
+    };
+
     dispatch(
       setUserInfo({
-        uid: user.uid,
-        email: user?.email || '',
-        displayName: user?.displayName || '',
-        profilePhoto: user?.photoURL || '',
+        ...userData,
       })
     );
-    return user;
   } catch (error) {
     console.log(error);
   }

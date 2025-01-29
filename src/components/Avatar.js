@@ -9,15 +9,10 @@ import DownloadImage from './DownloadImage';
 const Avatar = ({ photo, onPressChangeAvatar }) => {
   return (
     <View style={styles.avatar}>
-      {photo && (
-        <Image source={{ uri: photo }} style={{ borderRadius: 16 }}></Image>
+      {!!photo && (
+        <Image source={{ uri: photo }} style={styles.avatarImage}></Image>
       )}
-      {/* <StyledButton
-        buttonStyles={styles.avatarButton}
-        onPress={onPressChangeAvatar}
-      >
-        {!photo ? <CirclePlusSvg /> : <CircleCloseSvg />}
-      </StyledButton> */}
+
       <DownloadImage
         onPressDownload={onPressChangeAvatar}
         outerContainerStyles={styles.avatarContainer}
@@ -40,6 +35,12 @@ const styles = StyleSheet.create({
     height: 120,
     backgroundColor: colors.light_gray,
     borderRadius: 16,
+  },
+  avatarImage: {
+    borderRadius: 16,
+    height: '100%',
+    width: '100%',
+    resizeMode: 'cover',
   },
   avatarContainer: {
     position: 'absolute',

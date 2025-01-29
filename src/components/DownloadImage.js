@@ -4,6 +4,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import StyledButton from './StyledButton';
 import { colors } from '../styles/colors';
 
+import { useSelector } from 'react-redux';
+import { selectInfo } from '../redux/reducers/userSlice';
+
 const DownloadImage = ({
   showCamera,
   onPressDownload,
@@ -11,6 +14,7 @@ const DownloadImage = ({
   outerContainerStyles,
   outerButtonStyles,
 }) => {
+  const userInfo = useSelector(selectInfo);
   const pickImage = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();

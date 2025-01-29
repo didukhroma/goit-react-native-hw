@@ -50,10 +50,16 @@ export const updateUserInFirestore = async (uid, data) => {
 };
 
 // Функція для завантаження зображення
-export const uploadImage = async (userId, file, fileName) => {
+export const uploadImage = async (userId, uri, fileName) => {
+  const response = await fetch(uri);
+  const file = await response.blob();
+  const fileNameFromUri = uri.split('/').pop();
+  const fileType = file.type;
+  const imageFile = new File([file], fileNameFromUri, { type: fileType });
+
   try {
     const imageRef = ref(storage, `profilePhotos/${userId}/${fileName}`);
-    const result = await uploadBytes(imageRef, file);
+    const result = await uploadBytes(imageRef, imageFile);
 
     const imageUrl = await getImageUrl(imageRef);
     console.log('Upload result:', result);
