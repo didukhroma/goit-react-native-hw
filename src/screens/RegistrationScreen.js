@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -16,9 +16,6 @@ import Input from '../components/Input';
 import StyledButton from '../components/StyledButton';
 import StyledImageBackground from '../components/StyledImageBackground';
 
-import CircleCloseSvg from '../assets/icons/CircleCloseSvg';
-import CirclePlusSvg from '../assets/icons/CirclePlusSvg';
-
 import { REGISTER_INITIAL_STATE } from '../constants/constants';
 
 import { colors } from '../styles/colors';
@@ -28,6 +25,10 @@ export default function RegistrationScreen() {
   const [user, setUser] = useState(REGISTER_INITIAL_STATE);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    checkFormFilled();
+  }, [user.photo]);
 
   const onChangeUserData = (key, value) => {
     if (key === 'isPasswordHidden')
@@ -50,8 +51,6 @@ export default function RegistrationScreen() {
 
   const onPressChangeAvatar = (uri) => {
     onChangeUserData('photo', uri);
-
-    checkFormFilled();
   };
 
   const checkFormFilled = () => {

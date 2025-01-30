@@ -8,6 +8,9 @@ import { colors } from '../styles/colors';
 import { StyleSheet, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../utils/auth';
+import LogoutSvg from '../assets/icons/LogoutSvg';
+import StyledButton from '../components/StyledButton';
+import ProfileSvg from '../assets/icons/ProfileSvg';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,15 +53,14 @@ const BottomTabNavigator = () => {
             </View>
           ),
           headerRight: () => (
-            <Ionicons
-              name="log-out-outline"
-              size={30}
-              color={colors.dark_gray}
-              style={{ marginRight: 10 }}
+            <StyledButton
+              buttonStyles={{ marginRight: 16, backgroundColor: 'transparent' }}
               onPress={() => {
                 logoutUser(dispatch);
               }}
-            />
+            >
+              <LogoutSvg />
+            </StyledButton>
           ),
         })}
       />
@@ -93,7 +95,7 @@ const BottomTabNavigator = () => {
           headerShown: false,
           tabBarIcon: ({ focused, color }) => (
             <View style={[styles.button, focused && styles.buttonActive]}>
-              <Ionicons name="person-outline" size={24} color={color} />
+              <ProfileSvg color={color} />
             </View>
           ),
         })}

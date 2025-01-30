@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db, storage } from '../../config';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
@@ -74,4 +74,13 @@ export const uploadImage = async (userId, uri, fileName) => {
 export const getImageUrl = async (imageRef) => {
   const url = await getDownloadURL(imageRef);
   return url;
+};
+
+export const deleteImage = async (uid) => {
+  try {
+    await deleteDoc(doc(db, 'profilePhotos', uid));
+    console.log('Document successfully deleted!');
+  } catch (error) {
+    console.log('Error deleting image', error);
+  }
 };
