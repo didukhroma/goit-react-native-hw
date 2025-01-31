@@ -9,11 +9,11 @@ import {
 import { colors } from '../styles/colors';
 import Post from '../components/Post';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectInfo } from '../redux/reducers/userSlice';
-import { selectPosts, setPosts } from '../redux/reducers/postsSlice';
-import { getData, getPosts } from '../utils/firestore';
+import { selectPosts } from '../redux/reducers/postsSlice';
+
 import { fetchPosts } from '../redux/reducers/operation';
 
 const PostsScreen = () => {

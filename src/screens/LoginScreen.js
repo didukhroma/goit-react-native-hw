@@ -18,14 +18,11 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../utils/auth';
 import StyledImageBackground from '../components/StyledImageBackground';
-// import { useAuth } from '../context/authContext';
 
 const LoginScreen = () => {
   const [user, setUser] = useState(LOGIN_INITIAL_STATE);
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
-  // const { profile, setProfile } = useAuth();
 
   const onChangeUserData = (key, value) => {
     if (key === 'isPasswordHidden')

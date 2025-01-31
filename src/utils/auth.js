@@ -3,12 +3,10 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  updateProfile,
 } from 'firebase/auth';
-import { auth, db } from '../../config';
+import { auth } from '../../config';
 import { setUserInfo, clearUserInfo } from '../redux/reducers/userSlice';
 import { addUser, getData, getUser, uploadImage } from './firestore';
-import { doc, setDoc } from 'firebase/firestore';
 
 export const registerUser = async (
   { email, password, login, photo },
@@ -73,7 +71,7 @@ export const loginUser = async ({ email, password }, dispatch) => {
 export const logoutUser = async (dispatch) => {
   try {
     await signOut(auth);
-    // Очистити інформацію про користувача у Redux
+
     dispatch(clearUserInfo());
   } catch (error) {
     console.error('Logout error:', error);
@@ -97,16 +95,3 @@ export const authStateChanged = (dispatch) => {
     }
   });
 };
-
-//TODO: in progress
-// Оновлення профілю користувача
-// export const updateUserProfile = async (update) => {
-//   const user = auth.currentUser;
-//   if (user) {
-//     try {
-//       await updateProfile(user, update);
-//     } catch (error) {
-//       throw error;
-//     }
-//   }
-// };

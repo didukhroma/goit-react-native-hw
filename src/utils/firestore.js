@@ -2,7 +2,6 @@ import {
   doc,
   getDoc,
   setDoc,
-  deleteDoc,
   addDoc,
   collection,
   updateDoc,
@@ -12,9 +11,8 @@ import {
   arrayUnion,
 } from 'firebase/firestore';
 import { db, storage } from '../../config';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { ref, uploadBytes } from 'firebase/storage';
 
-// Функція для додавання документа до колекції
 export const addUser = async (userId, userData) => {
   try {
     await setDoc(doc(db, 'users', userId), userData, { merge: true });
@@ -91,7 +89,6 @@ export const addCommentService = async (postId, data) => {
   }
 };
 
-// Функція для отримання документа з колекції
 export const getData = async (userId, collection = 'users') => {
   const docRef = doc(db, collection, userId);
   const docSnap = await getDoc(docRef);
@@ -106,17 +103,6 @@ export const getData = async (userId, collection = 'users') => {
   }
 };
 
-// Функція для запису даних користувача у Firestore
-export const updateUserInFirestore = async (uid, data) => {
-  try {
-    await setDoc(doc(db, 'users', uid), data, { merge: true }); // merge: true - для оновлення існуючого документа або створення нового
-    console.log('User data updated to Firestore:', uid);
-  } catch (error) {
-    console.error('Error saving user data to Firestore:', error);
-  }
-};
-
-// Функція для завантаження зображення
 export const uploadImage = async (
   userId,
   uri,
@@ -143,20 +129,5 @@ export const uploadImage = async (
   } catch (error) {
     console.error('Error uploading image:', error);
     throw error;
-  }
-};
-
-// Функція для отримання URL завантаженого зображення
-export const getImageUrl = async (imageRef) => {
-  const url = await getDownloadURL(imageRef);
-  return url;
-};
-
-export const deleteImage = async (uid) => {
-  try {
-    await deleteDoc(doc(db, 'profilePhotos', uid));
-    console.log('Document successfully deleted!');
-  } catch (error) {
-    console.log('Error deleting image', error);
   }
 };
