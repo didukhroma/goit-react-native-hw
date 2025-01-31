@@ -7,9 +7,7 @@ const ImageWrapper = ({ uri }) => {
     <View style={styles.imageWrapper}>
       <Image
         source={
-          !!uri
-            ? { uri: uri }
-            : require('../assets/images/placeholderPostImage.jpg')
+          !!uri ? { uri } : require('../assets/images/placeholderPostImage.jpg')
         }
         style={styles.image}
       />
@@ -31,6 +29,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     height: '100%',
+    width: '100%',
     borderRadius: 8,
   },
 });

@@ -8,17 +8,21 @@ import {
 } from 'react-native';
 import { colors } from '../styles/colors';
 import Post from '../components/Post';
-import { db } from '../db/db';
+
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectInfo } from '../redux/reducers/userSlice';
+import { selectPosts, setPosts } from '../redux/reducers/postsSlice';
+import { getData, getPosts } from '../utils/firestore';
+import { fetchPosts } from '../redux/reducers/operation';
 
 const PostsScreen = () => {
   const user = useSelector(selectInfo);
-
-  const [posts, setPosts] = useState([]);
+  const posts = useSelector(selectPosts);
+  const dispatch = useDispatch();
 
   const prepareData = (data) => {
+    if (!data || data.length === 0) return [];
     //data without likes
     return data.map((el) => {
       const { likes, ...data } = el;
@@ -26,9 +30,11 @@ const PostsScreen = () => {
     });
   };
 
+  const preparedPosts = prepareData(posts);
+
   useEffect(() => {
-    setPosts(prepareData(db));
-  }, []);
+    dispatch(fetchPosts(user.uid));
+  }, [dispatch]);
 
   return (
     <ScrollView>
@@ -49,7 +55,7 @@ const PostsScreen = () => {
             </View>
           </View>
           <View style={styles.postsWrapper}>
-            {posts.map((post) => (
+            {preparedPosts.map((post) => (
               <Post post={post} key={post.id} />
             ))}
           </View>

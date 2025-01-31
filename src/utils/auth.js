@@ -5,9 +5,10 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth';
-import { auth } from '../../config';
+import { auth, db } from '../../config';
 import { setUserInfo, clearUserInfo } from '../redux/reducers/userSlice';
-import { addUser, getUser, uploadImage } from './firestore';
+import { addUser, getData, getUser, uploadImage } from './firestore';
+import { doc, setDoc } from 'firebase/firestore';
 
 export const registerUser = async (
   { email, password, login, photo },
@@ -44,12 +45,13 @@ export const registerUser = async (
   }
 };
 
-// Функція для логіну користувача та збереження його в Redux
 export const loginUser = async ({ email, password }, dispatch) => {
   try {
     const credentials = await signInWithEmailAndPassword(auth, email, password);
 
-    const user = credentials.user;
+    const { uid } = credentials.user;
+
+    const user = await getData(uid);
 
     const userData = {
       uid: user.uid,
@@ -68,7 +70,6 @@ export const loginUser = async ({ email, password }, dispatch) => {
   }
 };
 
-// Функція для логауту
 export const logoutUser = async (dispatch) => {
   try {
     await signOut(auth);
@@ -79,7 +80,6 @@ export const logoutUser = async (dispatch) => {
   }
 };
 
-// Відстеження змін у стані аутентифікації
 export const authStateChanged = (dispatch) => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -98,14 +98,15 @@ export const authStateChanged = (dispatch) => {
   });
 };
 
+//TODO: in progress
 // Оновлення профілю користувача
-export const updateUserProfile = async (update) => {
-  const user = auth.currentUser;
-  if (user) {
-    try {
-      await updateProfile(user, update);
-    } catch (error) {
-      throw error;
-    }
-  }
-};
+// export const updateUserProfile = async (update) => {
+//   const user = auth.currentUser;
+//   if (user) {
+//     try {
+//       await updateProfile(user, update);
+//     } catch (error) {
+//       throw error;
+//     }
+//   }
+// };

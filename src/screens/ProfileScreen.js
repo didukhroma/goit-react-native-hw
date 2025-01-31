@@ -6,14 +6,11 @@ import {
   Text,
   View,
 } from 'react-native';
-// import Ionicons from '@expo/vector-icons/Ionicons';
-// import { useNavigation } from '@react-navigation/native';
+
 import StyledButton from '../components/StyledButton';
-import CirclePlusSvg from '../assets/icons/CirclePlusSvg';
-// import { useAuth } from '../context/authContext';
+
 import { colors } from '../styles/colors';
-// import { PROFILE_INITIAL_STATE } from '../constants/constants';
-import { db } from '../db/db';
+
 import Post from '../components/Post';
 import { selectInfo } from '../redux/reducers/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,15 +18,20 @@ import { logoutUser, updateUserProfile } from '../utils/auth';
 import LogoutSvg from '../assets/icons/LogoutSvg';
 import Avatar from '../components/Avatar';
 import { deleteImage, uploadImage } from '../utils/firestore';
+import { useEffect } from 'react';
+import { fetchPosts } from '../redux/reducers/operation';
+import { selectPosts } from '../redux/reducers/postsSlice';
 
 const ProfileScreen = () => {
   const user = useSelector(selectInfo);
+  const posts = useSelector(selectPosts);
   const dispatch = useDispatch();
 
-  const posts = db;
+  useEffect(() => {
+    dispatch(fetchPosts(user.uid));
+  }, [dispatch]);
 
   const onPressChangeAvatar = async (uri) => {
-    console.log(uri);
     await deleteImage(user.uid);
     const newPhotoUrl = await uploadImage(user.uid, uri, 'avatar');
     await updateUserProfile({ photo: newPhotoUrl });

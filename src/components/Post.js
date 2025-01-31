@@ -11,13 +11,15 @@ const Post = ({ post }) => {
   const navigation = useNavigation();
 
   const onPressCommentButton = () =>
-    navigation.navigate('Comments', { id: post.id });
+    navigation.navigate('Comments', {
+      postId: post.id,
+    });
   const onPressLocationButton = () =>
-    navigation.navigate('Map', { id: post.id });
+    navigation.navigate('Map', { postId: post.id });
 
   return (
     <View style={styles.container}>
-      <ImageWrapper uri={post.uri} />
+      <ImageWrapper uri={post.image} />
 
       <Text style={styles.title}>{post.title}</Text>
       <View style={styles.infoContainer}>

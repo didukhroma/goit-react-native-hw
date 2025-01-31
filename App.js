@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useEffect } from 'react';
+import React, { use, useEffect } from 'react';
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
 import MainNavigator from './src/navigation/MainNavigator';
@@ -8,6 +8,7 @@ import { authStateChanged } from './src/utils/auth';
 import { Provider, useDispatch } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import store from './src/redux/store/store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -19,6 +20,18 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
+
+  // useEffect(() => {
+  //   async function clearStorage() {
+  //     try {
+  //       await AsyncStorage.clear();
+  //       console.log('AsyncStorage cleared successfully.');
+  //     } catch (error) {
+  //       console.error('Error clearing AsyncStorage:', error);
+  //     }
+  //   }
+  //   clearStorage();
+  // }, []);
 
   return (
     <Provider store={store.store}>

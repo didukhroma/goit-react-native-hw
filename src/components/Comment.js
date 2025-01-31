@@ -4,7 +4,7 @@ import { colors } from '../styles/colors';
 import { normalizeDataFormat } from '../helpers/normalizeDataFormat';
 
 const Comment = ({ comment, index }) => {
-  const normalizedData = normalizeDataFormat(comment.data);
+  const normalizedData = normalizeDataFormat(comment.timestamp);
 
   return (
     <View

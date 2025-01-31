@@ -1,14 +1,12 @@
 import React from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import StyledButton from './StyledButton';
-import { colors } from '../styles/colors';
 
 import { useSelector } from 'react-redux';
 import { selectInfo } from '../redux/reducers/userSlice';
 
 const DownloadImage = ({
-  showCamera,
   onPressDownload,
   children,
   outerContainerStyles,
@@ -37,30 +35,12 @@ const DownloadImage = ({
     }
   };
   return (
-    <View style={[styles.container, outerContainerStyles]}>
+    <View style={outerContainerStyles}>
       <StyledButton onPress={pickImage} buttonStyles={outerButtonStyles}>
         {children}
-        {/* <Text style={styles.imageText}>
-          {showCamera ? 'Завантажте фото' : 'Редагувати фото'}
-        </Text> */}
       </StyledButton>
     </View>
   );
 };
 
 export default DownloadImage;
-
-const styles = StyleSheet.create({
-  downloadButton: {
-    paddingVertical: 0,
-    paddingHorizontal: 0,
-    backgroundColor: 'transparent',
-    alignItems: 'flex-start',
-  },
-  imageText: {
-    color: colors.dark_gray,
-    fontFamily: 'Roboto-Regular',
-    fontSize: 16,
-    fontWeight: 400,
-  },
-});

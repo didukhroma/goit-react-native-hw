@@ -8,13 +8,7 @@ import StyledButton from './StyledButton';
 import { colors } from '../styles/colors';
 import DownloadImage from './DownloadImage';
 
-const Camera = ({
-  image = null,
-  onPressTakePicture,
-  showCamera,
-  setShowCamera,
-}) => {
-  // const [showCamera, setShowCamera] = useState(turnOnCamera);
+const Camera = ({ image = null, onPressTakePicture, showCamera }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const [libraryPermission, requestLibraryPermission] =
     MediaLibrary.usePermissions();
@@ -40,10 +34,6 @@ const Camera = ({
   }
 
   const takePhoto = async () => {
-    if (!showCamera) {
-      return setShowCamera(true);
-    }
-
     if (!camera) return;
 
     if (!libraryPermission.granted) {
@@ -53,21 +43,10 @@ const Camera = ({
     await MediaLibrary.saveToLibraryAsync(image.uri);
 
     onPressTakePicture(image.uri);
-
-    if (showCamera) {
-      setShowCamera((prev) => !prev);
-    }
-  };
-
-  const downloadPhoto = async (imageURI) => {
-    if (showCamera) {
-      setShowCamera(false);
-    }
-    onPressTakePicture(imageURI);
   };
 
   return (
-    <View style={styles.imageWrapper}>
+    <>
       <View style={styles.imageThumb}>
         {showCamera ? (
           <CameraView ref={camera} style={styles.thumb}>
@@ -90,9 +69,7 @@ const Camera = ({
           </View>
         )}
       </View>
-
-      <DownloadImage showCamera={showCamera} onPressDownload={downloadPhoto} />
-    </View>
+    </>
   );
 };
 

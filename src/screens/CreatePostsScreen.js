@@ -17,12 +17,19 @@ import { POST_INITIAL_STATE } from '../constants/constants';
 import { useState } from 'react';
 import Camera from '../components/Camera';
 import { useNavigation } from '@react-navigation/native';
-import { createPost } from '../db/db';
+
 import * as Location from 'expo-location';
+import DownloadImage from '../components/DownloadImage';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { selectInfo } from '../redux/reducers/userSlice';
+import { addPost } from '../redux/reducers/operation';
 
 const CreatePostsScreen = () => {
   const [post, setPost] = useState(POST_INITIAL_STATE);
   const [showCamera, setShowCamera] = useState(true);
+  const user = useSelector(selectInfo);
+  const dispatch = useDispatch();
 
   const navigation = useNavigation();
 
@@ -52,17 +59,25 @@ const CreatePostsScreen = () => {
 
     let location = await Location.getCurrentPositionAsync({});
 
-    onChangePostData('coords', {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    });
+    const data = {
+      ...post,
+      coords: {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      },
+      userId: user.uid,
+    };
 
-    createPost(post);
+    dispatch(addPost(data));
+
     clearAllData();
-    navigation.goBack();
+    navigation.navigate('Posts');
   };
 
   const takePhoto = async (imageURI) => {
+    if (showCamera) {
+      setShowCamera(false);
+    }
     onChangePostData('image', imageURI);
     checkForm();
   };
@@ -76,12 +91,22 @@ const CreatePostsScreen = () => {
             style={styles.container}
           >
             <View style={styles.thumb}>
-              <Camera
-                onPressTakePicture={takePhoto}
-                image={post.image}
-                showCamera={showCamera}
-                setShowCamera={setShowCamera}
-              />
+              <View style={styles.imageWrapper}>
+                <Camera
+                  onPressTakePicture={takePhoto}
+                  image={post.image}
+                  showCamera={showCamera}
+                  // setShowCamera={setShowCamera}
+                />
+                <DownloadImage
+                  onPressDownload={takePhoto}
+                  outerButtonStyles={styles.downloadButton}
+                >
+                  <Text style={styles.imageText}>
+                    {showCamera ? 'Завантажте фото' : 'Редагувати фото'}
+                  </Text>
+                </DownloadImage>
+              </View>
 
               <View style={styles.inputWrapper}>
                 <Input
@@ -209,5 +234,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     width: 70,
     alignSelf: 'center',
+  },
+  downloadButton: {
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+    backgroundColor: 'transparent',
+    alignItems: 'flex-start',
   },
 });

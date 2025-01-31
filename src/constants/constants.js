@@ -14,14 +14,8 @@ export const LOGIN_INITIAL_STATE = {
   isFormFilled: false,
 };
 
-export const PROFILE_INITIAL_STATE = {
-  login: 'Test user',
-  email: 'test@test.com',
-  password: '',
-  isLoggedIn: true,
-};
-
 export const POST_INITIAL_STATE = {
+  userId: '',
   image: '',
   title: '',
   location: '',
@@ -29,5 +23,7 @@ export const POST_INITIAL_STATE = {
     latitude: 0,
     longitude: 0,
   },
+  comments: [],
+  likes: 0,
   isEmptyPost: true,
 };

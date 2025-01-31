@@ -3,15 +3,16 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { colors } from '../styles/colors';
 import { useRoute } from '@react-navigation/native';
-import { getData } from '../db/db';
+import { useSelector } from 'react-redux';
 
 const MapScreen = () => {
   const {
-    params: { id },
+    params: { postId },
   } = useRoute();
 
-  const coords = getData(id, 'coords');
-  const title = getData(id, 'title');
+  const { coords, title } = useSelector((state) =>
+    state.posts.data.find((post) => post.id === postId)
+  );
 
   return (
     <View style={styles.container}>

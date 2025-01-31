@@ -8,8 +8,8 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserInfo(state, action) {
-      state.userInfo = action.payload;
+    setUserInfo(state, { payload }) {
+      state.userInfo = payload;
     },
     clearUserInfo(state) {
       state.userInfo = null;

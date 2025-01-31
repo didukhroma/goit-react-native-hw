@@ -1,4 +1,16 @@
-import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import {
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  addDoc,
+  collection,
+  updateDoc,
+  getDocs,
+  where,
+  query,
+  arrayUnion,
+} from 'firebase/firestore';
 import { db, storage } from '../../config';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
@@ -12,27 +24,82 @@ export const addUser = async (userId, userData) => {
   }
 };
 
-export const addPost = async (userId, post) => {
+export const addPostService = async (post) => {
   try {
-    await setDoc(
-      doc(db, 'posts', userId),
-      { userId, posts: [post] },
-      { merge: true }
+    const postRef = await addDoc(collection(db, 'posts'), {
+      ...post,
+    });
+
+    const postImage = await uploadImage(
+      post.userID,
+      post.image,
+      postRef.id,
+      'postsPhotos'
     );
-    console.log('Post added:', userId);
+
+    await updateDoc(postRef, {
+      image: postImage,
+      id: postRef.id,
+    });
+
+    const docSnap = await getDoc(postRef);
+
+    if (docSnap.exists()) {
+      const post = docSnap.data();
+
+      return post;
+    } else {
+      throw new Error('Error adding post');
+    }
   } catch (error) {
     console.error('Error adding post:', error);
   }
 };
 
+export const getAllPostsService = async (userId) => {
+  try {
+    const q = query(collection(db, 'posts'), where('userId', '==', userId));
+    const querySnapshot = await getDocs(q);
+
+    const data = querySnapshot.docs.map((doc) => doc.data());
+
+    return data;
+  } catch (error) {
+    console.error('Error getting posts:', error);
+  }
+};
+
+export const addCommentService = async (postId, data) => {
+  try {
+    const postRef = doc(db, 'posts', postId);
+
+    await updateDoc(postRef, {
+      comments: arrayUnion({ ...data }),
+    });
+
+    const docSnap = await getDoc(postRef);
+
+    if (docSnap.exists()) {
+      const post = docSnap.data();
+
+      return post;
+    } else {
+      throw new Error('Error adding comments');
+    }
+  } catch (error) {
+    console.log('Error in add comment', error.message);
+  }
+};
+
 // Функція для отримання документа з колекції
-export const getUser = async (userId) => {
-  const docRef = doc(db, 'users', userId);
+export const getData = async (userId, collection = 'users') => {
+  const docRef = doc(db, collection, userId);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    console.log('User data:', docSnap.data());
-    return docSnap.data();
+    if (collection === 'users') return docSnap.data();
+    const data = docSnap.data().posts;
+    return data;
   } else {
     console.log('No such document!');
     return null;
@@ -50,7 +117,12 @@ export const updateUserInFirestore = async (uid, data) => {
 };
 
 // Функція для завантаження зображення
-export const uploadImage = async (userId, uri, fileName) => {
+export const uploadImage = async (
+  userId,
+  uri,
+  fileName,
+  path = 'profilePhotos'
+) => {
   const response = await fetch(uri);
   const file = await response.blob();
   const fileNameFromUri = uri.split('/').pop();
@@ -58,11 +130,15 @@ export const uploadImage = async (userId, uri, fileName) => {
   const imageFile = new File([file], fileNameFromUri, { type: fileType });
 
   try {
-    const imageRef = ref(storage, `profilePhotos/${userId}/${fileName}`);
-    const result = await uploadBytes(imageRef, imageFile);
+    const imageRef = ref(
+      storage,
+      `${path}/${userId}/${fileName.toLowerCase()}`
+    );
+
+    await uploadBytes(imageRef, imageFile);
 
     const imageUrl = await getImageUrl(imageRef);
-    console.log('Upload result:', result);
+    console.log('Upload image done');
     return imageUrl;
   } catch (error) {
     console.error('Error uploading image:', error);

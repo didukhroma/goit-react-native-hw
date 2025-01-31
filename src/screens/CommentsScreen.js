@@ -3,26 +3,42 @@ import ImageWrapper from '../components/ImageWrapper';
 import { colors } from '../styles/colors';
 import Comment from '../components/Comment';
 import { useRoute } from '@react-navigation/native';
-import { addCommentToDB, getData } from '../db/db';
+
 import StyledButton from '../components/StyledButton';
 import Input from '../components/Input';
 import ArrowUp from '../assets/icons/ArrowUp';
 import { useState } from 'react';
+import uuid from 'react-native-uuid';
+import { useDispatch, useSelector } from 'react-redux';
+import { addComment } from '../redux/reducers/operation';
+import { selectInfo } from '../redux/reducers/userSlice';
 
 const INITIAL_COMMENT_STATE = '';
 
 const CommentsScreen = () => {
-  const [comment, setComment] = useState(INITIAL_COMMENT_STATE);
-
   const {
-    params: { id },
+    params: { postId },
   } = useRoute();
 
-  const comments = getData(id, 'comments');
-  const image = getData(id, 'uri');
+  const { comments, image } = useSelector((state) =>
+    state.posts.data.find((post) => post.id === postId)
+  );
+  const { photo } = useSelector(selectInfo);
+
+  const dispatch = useDispatch();
+
+  const [comment, setComment] = useState(INITIAL_COMMENT_STATE);
 
   const onPressAddComment = () => {
-    addCommentToDB(id, comment);
+    const data = {
+      id: uuid.v4(),
+      avatar: photo,
+      text: comment,
+      timestamp: Date.now(),
+    };
+
+    dispatch(addComment({ postId, data }));
+    console.log('add comment');
     setComment(INITIAL_COMMENT_STATE);
   };
 
@@ -31,9 +47,10 @@ const CommentsScreen = () => {
       <View style={styles.container}>
         <ImageWrapper uri={image} />
         <View style={styles.commentsWrapper}>
-          {comments.map((comment, idx) => (
-            <Comment key={comment.id} comment={comment} index={idx} />
-          ))}
+          {comments.length > 0 &&
+            comments.map((comment, idx) => (
+              <Comment key={comment.id} comment={comment} index={idx} />
+            ))}
         </View>
         <View>
           <Input

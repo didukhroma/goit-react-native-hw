@@ -13,7 +13,6 @@ const MainStack = createStackNavigator();
 
 const MainNavigator = () => {
   const user = useSelector(selectInfo);
-  console.log(user);
 
   return (
     <MainStack.Navigator
