@@ -21,18 +21,6 @@ export default function App() {
     return null;
   }
 
-  // useEffect(() => {
-  //   async function clearStorage() {
-  //     try {
-  //       await AsyncStorage.clear();
-  //       console.log('AsyncStorage cleared successfully.');
-  //     } catch (error) {
-  //       console.error('Error clearing AsyncStorage:', error);
-  //     }
-  //   }
-  //   clearStorage();
-  // }, []);
-
   return (
     <Provider store={store.store}>
       <PersistGate loading={null} persistor={store.persistor}>
