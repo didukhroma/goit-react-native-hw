@@ -64,11 +64,6 @@ const ProfileScreen = () => {
                 onPress={onPressLogout}
               >
                 <LogoutSvg />
-                {/* <Ionicons
-                  name="log-out-outline"
-                  size={24}
-                  color={colors.dark_gray}
-                /> */}
               </StyledButton>
               {/* TITLE */}
               <Text style={styles.title}>{user.login}</Text>

@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
+
 import Input from '../components/Input';
 import { colors } from '../styles/colors';
 import StyledButton from '../components/StyledButton';
@@ -24,6 +24,8 @@ import DownloadImage from '../components/DownloadImage';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectInfo } from '../redux/reducers/userSlice';
 import { addPost } from '../redux/reducers/operation';
+import MapSvg from '../assets/icons/MapSvg';
+import TrashSvg from '../assets/icons/TrashSvg';
 
 const CreatePostsScreen = () => {
   const [post, setPost] = useState(POST_INITIAL_STATE);
@@ -34,6 +36,12 @@ const CreatePostsScreen = () => {
   const navigation = useNavigation();
 
   const onChangePostData = (key, value) => {
+    if (key === 'image') {
+      setPost((prev) => ({ ...prev, [key]: value, isEmptyPost: false }));
+
+      return;
+    }
+
     setPost((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -74,12 +82,11 @@ const CreatePostsScreen = () => {
     navigation.navigate('Posts');
   };
 
-  const takePhoto = async (imageURI) => {
+  const takePhoto = (imageURI) => {
     if (showCamera) {
       setShowCamera(false);
     }
     onChangePostData('image', imageURI);
-    checkForm();
   };
 
   return (
@@ -122,13 +129,7 @@ const CreatePostsScreen = () => {
                   outerStyles={[styles.input, styles.inputLocation]}
                   value={post.location}
                   onBlurInput={checkForm}
-                  icon={
-                    <Ionicons
-                      name="location-outline"
-                      size={24}
-                      color={colors.dark_gray}
-                    />
-                  }
+                  icon={<MapSvg color={colors.dark_gray} />}
                 ></Input>
               </View>
               <StyledButton
@@ -152,11 +153,7 @@ const CreatePostsScreen = () => {
               onPress={clearAllData}
               buttonStyles={styles.trashButton}
             >
-              <Ionicons
-                name="trash-outline"
-                size={24}
-                color={colors.dark_gray}
-              />
+              <TrashSvg />
             </StyledButton>
           </KeyboardAvoidingView>
         </View>
@@ -171,7 +168,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 32,
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     backgroundColor: colors.white,
     justifyContent: 'space-between',
     minHeight: Dimensions.get('window').height,

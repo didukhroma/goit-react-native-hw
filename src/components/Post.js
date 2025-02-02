@@ -17,6 +17,8 @@ const Post = ({ post }) => {
   const onPressLocationButton = () =>
     navigation.navigate('Map', { postId: post.id });
 
+  const location = post.location.at(0).toUpperCase() + post.location.slice(1);
+
   return (
     <View style={styles.container}>
       <ImageWrapper uri={post.image} />
@@ -70,7 +72,7 @@ const Post = ({ post }) => {
             <Text
               style={[styles.comments, post.info === 0 && styles.infoNonActive]}
             >
-              {post.location}
+              {location}
             </Text>
           </View>
         </StyledButton>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Svg, { G, Rect, Path, Defs, ClipPath } from 'react-native-svg';
 import { colors } from '../../styles/colors';
-const SvgComponent = (props) => (
+const AddPostSvg = (props) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     width={70}
@@ -25,4 +25,4 @@ const SvgComponent = (props) => (
     </Defs>
   </Svg>
 );
-export default SvgComponent;
+export default AddPostSvg;

@@ -30,6 +30,7 @@ const CommentsScreen = () => {
   const [comment, setComment] = useState(INITIAL_COMMENT_STATE);
 
   const onPressAddComment = () => {
+    if (!comment) return;
     const data = {
       id: uuid.v4(),
       avatar: photo,
@@ -38,7 +39,6 @@ const CommentsScreen = () => {
     };
 
     dispatch(addComment({ postId, data }));
-    console.log('add comment');
     setComment(INITIAL_COMMENT_STATE);
   };
 

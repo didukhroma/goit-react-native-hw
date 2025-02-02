@@ -1,12 +1,11 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Button, Image, StyleSheet, Text, View } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 
 import StyledButton from './StyledButton';
 import { colors } from '../styles/colors';
-import DownloadImage from './DownloadImage';
+import CameraSvg from '../assets/icons/CameraSvg';
 
 const Camera = ({ image = null, onPressTakePicture, showCamera }) => {
   const [permission, requestPermission] = useCameraPermissions();
@@ -54,7 +53,7 @@ const Camera = ({ image = null, onPressTakePicture, showCamera }) => {
               onPress={takePhoto}
               buttonStyles={styles.cameraWrapper}
             >
-              <Ionicons name="camera" size={24} color={colors.dark_gray} />
+              <CameraSvg color={colors.dark_gray} />
             </StyledButton>
           </CameraView>
         ) : (
@@ -64,7 +63,7 @@ const Camera = ({ image = null, onPressTakePicture, showCamera }) => {
               onPress={takePhoto}
               buttonStyles={styles.cameraWrapperActive}
             >
-              <Ionicons name="camera" size={24} color={colors.white} />
+              <CameraSvg color={colors.white} />
             </StyledButton>
           </View>
         )}

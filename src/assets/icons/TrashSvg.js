@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Svg, { Path } from 'react-native-svg';
 import { colors } from '../../styles/colors';
-const SvgComponent = (props) => (
+const TrashSvg = (props) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     width={24}
@@ -27,4 +27,4 @@ const SvgComponent = (props) => (
     />
   </Svg>
 );
-export default SvgComponent;
+export default TrashSvg;

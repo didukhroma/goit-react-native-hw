@@ -1,16 +1,18 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from '@expo/vector-icons/Ionicons';
 
 import PostsScreen from '../screens/PostsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CreatePostsScreen from '../screens/CreatePostsScreen';
 import { colors } from '../styles/colors';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../utils/auth';
 import LogoutSvg from '../assets/icons/LogoutSvg';
 import StyledButton from '../components/StyledButton';
 import ProfileSvg from '../assets/icons/ProfileSvg';
+import ArrowLeftSvg from '../assets/icons/ArrowLeftSvg';
+import PostsSvg from '../assets/icons/PostsSvg';
+import AddPostSvg from '../assets/icons/AddPostSvg';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,10 +49,8 @@ const BottomTabNavigator = () => {
         component={PostsScreen}
         options={({ navigation }) => ({
           title: 'Публікації',
-          tabBarIcon: ({ focused, color }) => (
-            <View style={[styles.button, focused && styles.buttonActive]}>
-              <Ionicons name="grid-outline" size={20} color={color} />
-            </View>
+          tabBarIcon: () => (
+            <PostsSvg fill={colors.white} stroke={colors.black} />
           ),
           headerRight: () => (
             <StyledButton
@@ -70,21 +70,14 @@ const BottomTabNavigator = () => {
         options={({ navigation }) => ({
           title: 'Створити публікацію',
           tabBarStyle: { display: 'none' },
-          tabBarIcon: ({ focused, color }) => (
-            <View style={[styles.button, focused && styles.buttonActive]}>
-              <Ionicons name="add-outline" size={24} color={color} />
-            </View>
-          ),
+          tabBarIcon: () => <AddPostSvg />,
           headerLeft: () => (
-            <Ionicons
-              name="arrow-back-outline"
-              size={30}
-              color={colors.black}
-              style={{ marginLeft: 16 }}
-              onPress={() => {
-                navigation.goBack();
-              }}
-            />
+            <StyledButton
+              onPress={() => navigation.goBack()}
+              buttonStyles={{ marginLeft: 16, backgroundColor: 'transparent' }}
+            >
+              <ArrowLeftSvg />
+            </StyledButton>
           ),
         })}
       />
@@ -93,11 +86,7 @@ const BottomTabNavigator = () => {
         component={ProfileScreen}
         options={() => ({
           headerShown: false,
-          tabBarIcon: ({ focused, color }) => (
-            <View style={[styles.button, focused && styles.buttonActive]}>
-              <ProfileSvg color={color} />
-            </View>
-          ),
+          tabBarIcon: () => <ProfileSvg color={colors.black} />,
         })}
       />
     </Tab.Navigator>

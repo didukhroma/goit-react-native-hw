@@ -9,9 +9,10 @@ import {
   where,
   query,
   arrayUnion,
+  deleteDoc,
 } from 'firebase/firestore';
 import { db, storage } from '../../config';
-import { ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 export const addUser = async (userId, userData) => {
   try {
@@ -129,5 +130,18 @@ export const uploadImage = async (
   } catch (error) {
     console.error('Error uploading image:', error);
     throw error;
+  }
+};
+
+export const getImageUrl = async (imageRef) => {
+  const url = await getDownloadURL(imageRef);
+  return url;
+};
+export const deleteImage = async (uid) => {
+  try {
+    await deleteDoc(doc(db, 'profilePhotos', uid));
+    console.log('Document successfully deleted!');
+  } catch (error) {
+    console.log('Error deleting image', error);
   }
 };

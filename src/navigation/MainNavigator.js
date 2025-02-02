@@ -8,6 +8,8 @@ import CommentsScreen from '../screens/CommentsScreen';
 import { colors } from '../styles/colors';
 import { selectInfo } from '../redux/reducers/userSlice';
 import { useSelector } from 'react-redux';
+import StyledButton from '../components/StyledButton';
+import ArrowLeftSvg from '../assets/icons/ArrowLeftSvg';
 
 const MainStack = createStackNavigator();
 
@@ -24,7 +26,7 @@ const MainNavigator = () => {
           <MainStack.Screen
             name="Map"
             component={MapScreen}
-            options={{
+            options={({ navigation }) => ({
               title: 'Карта',
               headerShown: true,
               headerTintColor: colors.black,
@@ -34,12 +36,23 @@ const MainNavigator = () => {
                 fontSize: 17,
                 fontWeight: 500,
               },
-            }}
+              headerLeft: () => (
+                <StyledButton
+                  onPress={() => navigation.goBack()}
+                  buttonStyles={{
+                    marginLeft: 16,
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  <ArrowLeftSvg />
+                </StyledButton>
+              ),
+            })}
           />
           <MainStack.Screen
             name="Comments"
             component={CommentsScreen}
-            options={{
+            options={({ navigation }) => ({
               headerShown: true,
               headerTintColor: colors.black,
               headerTitleAlign: 'center',
@@ -48,7 +61,18 @@ const MainNavigator = () => {
                 fontSize: 17,
                 fontWeight: 500,
               },
-            }}
+              headerLeft: () => (
+                <StyledButton
+                  onPress={() => navigation.goBack()}
+                  buttonStyles={{
+                    marginLeft: 16,
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  <ArrowLeftSvg />
+                </StyledButton>
+              ),
+            })}
           />
         </>
       ) : (

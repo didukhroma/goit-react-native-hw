@@ -2,7 +2,7 @@
   "expo": {
     "name": "myApp",
     "slug": "myApp",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "userInterfaceStyle": "light",
@@ -21,13 +21,22 @@
         "backgroundColor": "#ffffff"
       },
       "config": {
-        "googleMaps": { "apiKey": "AIzaSyCw_1xy74cWLh8n0l_SEg7EPl5CGHOEyrE" }
+        "googleMaps": {
+          "apiKey": "AIzaSyCw_1xy74cWLh8n0l_SEg7EPl5CGHOEyrE"
+        }
       },
       "package": "com.anonymous.myApp"
     },
     "web": {
       "favicon": "./src/assets/images/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "cca8e58e-2ad8-4529-abe2-0857448fd411"
+      }
+    }
   }
 }
